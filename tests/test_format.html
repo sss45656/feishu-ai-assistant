@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>格式测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-box {
+            border: 2px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .message-content p {
+            margin-bottom: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+        h2 {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <h1>📝 格式测试页面</h1>
+    
+    <div class="test-box">
+        <h2>测试1: 带换行符的文本</h2>
+        <div class="message-content">
+            <p>• 完成项目需求文档
+  优先级：高
+  截止日期：2024-04-16
+  状态：进行中
+
+• 代码审查
+  优先级：中
+  截止日期：2024-04-15
+  状态：待开始
+
+• 更新用户手册
+  优先级：低
+  截止日期：2024-04-19
+  状态：已完成</p>
+        </div>
+    </div>
+
+    <div class="test-box">
+        <h2>测试2: 会议列表</h2>
+        <div class="message-content">
+            <p>• 产品周会
+  时间：今天下午16:00
+  地点：会议室A
+  参会人：张三、李四、王五
+
+• 技术评审会议
+  时间：明天上午10:00
+  地点：会议室B
+  参会人：赵六、钱七</p>
+        </div>
+    </div>
+
+    <div class="test-box">
+        <h2>测试3: 使用innerHTML动态设置</h2>
+        <div id="dynamic-content" class="message-content">
+            <p></p>
+        </div>
+    </div>
+
+    <script>
+        // 模拟流式输出
+        const testContent = `• 完成项目需求文档
+  优先级：高
+  截止日期：2024-04-16
+  状态：进行中
+
+• 代码审查
+  优先级：中
+  截止日期：2024-04-15
+  状态：待开始
+
+• 更新用户手册
+  优先级：低
+  截止日期：2024-04-19
+  状态：已完成`;
+
+        function formatMessage(content) {
+            if (!content) return '';
+            
+            let formatted = content
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            
+            formatted = formatted.replace(/\n/g, '<br>');
+            formatted = formatted.replace(/  /g, '&nbsp;&nbsp;');
+            
+            return formatted;
+        }
+
+        // 动态设置内容
+        setTimeout(() => {
+            document.querySelector('#dynamic-content p').innerHTML = formatMessage(testContent);
+        }, 1000);
+    </script>
+</body>
+</html>

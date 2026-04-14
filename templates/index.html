@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飞书AI办公协同智能助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>🚀 飞书AI助手</h1>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" data-view="chat">
+                    <span class="icon">💬</span>
+                    <span>智能对话</span>
+                </button>
+                <button class="nav-item" data-view="meetings">
+                    <span class="icon">📅</span>
+                    <span>会议管理</span>
+                </button>
+                <button class="nav-item" data-view="tasks">
+                    <span class="icon">✅</span>
+                    <span>任务管理</span>
+                </button>
+                <button class="nav-item" data-view="documents">
+                    <span class="icon">📄</span>
+                    <span>文档检索</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span id="status-text">在线</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 智能对话视图 -->
+            <div id="chat-view" class="view active">
+                <div class="view-header">
+                    <h2>💬 智能对话</h2>
+                    <button class="btn btn-secondary" onclick="clearChat()">清空对话</button>
+                </div>
+                
+                <div class="chat-container">
+                    <div id="chat-messages" class="chat-messages">
+                        <div class="message assistant">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <p>你好！我是你的办公协同智能助手，可以帮你：</p>
+                                <ul>
+                                    <li>📅 安排和管理会议</li>
+                                    <li>✅ 创建和跟踪任务</li>
+                                    <li>📄 搜索和管理文档</li>
+                                    <li>💬 回答办公相关问题</li>
+                                </ul>
+                                <p>请问有什么可以帮助你的吗？</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <input 
+                            type="text" 
+                            id="chat-input" 
+                            placeholder="输入消息..." 
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button class="btn btn-primary" onclick="sendMessage()">发送</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 会议管理视图 -->
+            <div id="meetings-view" class="view">
+                <div class="view-header">
+                    <h2>📅 会议管理</h2>
+                    <button class="btn btn-primary" onclick="showCreateMeetingForm()">+ 新建会议</button>
+                </div>
+                
+                <div id="create-meeting-form" class="form-container" style="display: none;">
+                    <h3>创建新会议</h3>
+                    <div class="form-group">
+                        <label>会议标题</label>
+                        <input type="text" id="meeting-title" placeholder="例如：项目评审会议">
+                    </div>
+                    <div class="form-group">
+                        <label>时间</label>
+                        <input type="text" id="meeting-time" placeholder="例如：明天下午3点">
+                    </div>
+                    <div class="form-group">
+                        <label>参会人员（用逗号分隔）</label>
+                        <input type="text" id="meeting-participants" placeholder="例如：张三,李四,王五">
+                    </div>
+                    <div class="form-group">
+                        <label>时长</label>
+                        <input type="text" id="meeting-duration" value="60分钟">
+                    </div>
+                    <div class="form-group">
+                        <label>地点</label>
+                        <input type="text" id="meeting-location" placeholder="例如：会议室A">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary" onclick="createMeeting()">创建</button>
+                        <button class="btn btn-secondary" onclick="hideCreateMeetingForm()">取消</button>
+                    </div>
+                </div>
+                
+                <div id="meetings-list" class="cards-grid">
+                    <!-- 会议列表将动态加载 -->
+                </div>
+            </div>
+
+            <!-- 任务管理视图 -->
+            <div id="tasks-view" class="view">
+                <div class="view-header">
+                    <h2>✅ 任务管理</h2>
+                    <button class="btn btn-primary" onclick="showCreateTaskForm()">+ 新建任务</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <button class="filter-btn active" onclick="filterTasks('')">全部</button>
+                    <button class="filter-btn" onclick="filterTasks('待开始')">待开始</button>
+                    <button class="filter-btn" onclick="filterTasks('进行中')">进行中</button>
+                    <button class="filter-btn" onclick="filterTasks('已完成')">已完成</button>
+                </div>
+                
+                <div id="create-task-form" class="form-container" style="display: none;">
+                    <h3>创建新任务</h3>
+                    <div class="form-group">
+                        <label>任务标题</label>
+                        <input type="text" id="task-title" placeholder="例如：完成项目报告">
+                    </div>
+                    <div class="form-group">
+                        <label>截止日期</label>
+                        <input type="text" id="task-deadline" placeholder="例如：本周五">
+                    </div>
+                    <div class="form-group">
+                        <label>优先级</label>
+                        <select id="task-priority">
+                            <option value="高">高</option>
+                            <option value="中" selected>中</option>
+                            <option value="低">低</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>描述</label>
+                        <textarea id="task-description" rows="3" placeholder="任务描述..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary" onclick="createTask()">创建</button>
+                        <button class="btn btn-secondary" onclick="hideCreateTaskForm()">取消</button>
+                    </div>
+                </div>
+                
+                <div id="tasks-list" class="cards-grid">
+                    <!-- 任务列表将动态加载 -->
+                </div>
+            </div>
+
+            <!-- 文档检索视图 -->
+            <div id="documents-view" class="view">
+                <div class="view-header">
+                    <h2>📄 文档检索</h2>
+                </div>
+                
+                <div class="search-bar">
+                    <input 
+                        type="text" 
+                        id="document-search" 
+                        placeholder="搜索文档..." 
+                        onkeypress="handleSearchKeyPress(event)"
+                    >
+                    <button class="btn btn-primary" onclick="searchDocuments()">搜索</button>
+                    <button class="btn btn-secondary" onclick="loadAllDocuments()">显示全部</button>
+                </div>
+                
+                <div id="documents-list" class="cards-grid">
+                    <!-- 文档列表将动态加载 -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
