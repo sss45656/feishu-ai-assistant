@@ -312,14 +312,4 @@ python tests/test_memory.py
 python tests/test_final_format.py
 ```
 
-## 许可证
-
-MIT License
-
-## 作者
-
-Feishu AI Team
-
----
-
 **享受智能办公带来的效率提升！** 🚀
